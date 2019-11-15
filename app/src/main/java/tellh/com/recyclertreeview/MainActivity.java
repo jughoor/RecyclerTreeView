@@ -28,58 +28,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initView();
+        rv = (RecyclerView) findViewById(R.id.rv);
         initData();
     }
 
     private void initData() {
         List<TreeNode> nodes = new ArrayList<>();
-        TreeNode<Dir> app = new TreeNode<>(new Dir("app"));
-        nodes.add(app);
-        app.addChild(
-                new TreeNode<>(new Dir("manifests"))
-                        .addChild(new TreeNode<>(new File("AndroidManifest.xml")))
-        );
-        app.addChild(
-                new TreeNode<>(new Dir("java")).addChild(
-                        new TreeNode<>(new Dir("tellh")).addChild(
-                                new TreeNode<>(new Dir("com")).addChild(
-                                        new TreeNode<>(new Dir("recyclertreeview"))
-                                                .addChild(new TreeNode<>(new File("Dir")))
-                                                .addChild(new TreeNode<>(new File("DirectoryNodeBinder")))
-                                                .addChild(new TreeNode<>(new File("File")))
-                                                .addChild(new TreeNode<>(new File("FileNodeBinder")))
-                                                .addChild(new TreeNode<>(new File("TreeViewBinder")))
-                                )
-                        )
-                )
-        );
-        TreeNode<Dir> res = new TreeNode<>(new Dir("res"));
-        nodes.add(res);
-        res.addChild(
-                new TreeNode<>(new Dir("layout")).lock() // lock this TreeNode
-                        .addChild(new TreeNode<>(new File("activity_main.xml")))
-                        .addChild(new TreeNode<>(new File("item_dir.xml")))
-                        .addChild(new TreeNode<>(new File("item_file.xml")))
-        );
-        res.addChild(
-                new TreeNode<>(new Dir("mipmap"))
-                        .addChild(new TreeNode<>(new File("ic_launcher.png")))
-        );
+
+        for(int i = 0; i < 5; i++){
+            TreeNode<Dir> app = new TreeNode<>(new Dir("app", "http://i.imgur.com/DvpvklR.png"));
+            nodes.add(app);
+            app.addChild(
+                    new TreeNode<>(new Dir("manifests", "http://java.sogeti.nl/JavaBlog/wp-content/uploads/2009/04/android_icon_256.png"))
+                            .addChild(new TreeNode<>(new Dir("AndroidManifest.xml", "http://i.imgur.com/DvpvklR.png")))
+                            .addChild(new TreeNode<>(new Dir("AndroidManifest.xml", "http://i.imgur.com/DvpvklR.png")))
+                            .addChild(new TreeNode<>(new Dir("AndroidManifest.xml", "http://java.sogeti.nl/JavaBlog/wp-content/uploads/2009/04/android_icon_256.png")))
+            );
+        }
 
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new TreeViewAdapter(nodes, Arrays.asList(new FileNodeBinder(), new DirectoryNodeBinder()));
-        // whether collapse child nodes when their parent node was close.
-//        adapter.ifCollapseChildWhileCollapseParent(true);
         adapter.setOnTreeNodeListener(new TreeViewAdapter.OnTreeNodeListener() {
             @Override
             public boolean onClick(TreeNode node, RecyclerView.ViewHolder holder) {
-                if (!node.isLeaf()) {
-                    //Update and toggle the node.
-                    onToggle(!node.isExpand(), holder);
-//                    if (!node.isExpand())
-//                        adapter.collapseBrotherNode(node);
-                }
+                if (!node.isLeaf()) {}
                 return false;
             }
 
@@ -93,30 +65,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         rv.setAdapter(adapter);
-    }
-
-    private void initView() {
-        rv = (RecyclerView) findViewById(R.id.rv);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.id_action_close_all:
-                adapter.collapseAll();
-                break;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 }

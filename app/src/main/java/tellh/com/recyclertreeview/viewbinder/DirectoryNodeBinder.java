@@ -4,6 +4,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import tellh.com.recyclertreeview.R;
 import tellh.com.recyclertreeview.bean.Dir;
 import tellh.com.recyclertreeview_lib.TreeNode;
@@ -27,6 +29,7 @@ public class DirectoryNodeBinder extends TreeViewBinder<DirectoryNodeBinder.View
         holder.ivArrow.setRotation(rotateDegree);
         Dir dirNode = (Dir) node.getContent();
         holder.tvName.setText(dirNode.dirName);
+        Picasso.get().load(dirNode.imgUrl).into(holder.itemImage);
         if (node.isLeaf())
             holder.ivArrow.setVisibility(View.INVISIBLE);
         else holder.ivArrow.setVisibility(View.VISIBLE);
@@ -38,17 +41,22 @@ public class DirectoryNodeBinder extends TreeViewBinder<DirectoryNodeBinder.View
     }
 
     public static class ViewHolder extends TreeViewBinder.ViewHolder {
-        private ImageView ivArrow;
+        private ImageView ivArrow, itemImage;
         private TextView tvName;
 
         public ViewHolder(View rootView) {
             super(rootView);
-            this.ivArrow = (ImageView) rootView.findViewById(R.id.iv_arrow);
-            this.tvName = (TextView) rootView.findViewById(R.id.tv_name);
+            this.ivArrow = rootView.findViewById(R.id.iv_arrow);
+            this.tvName = rootView.findViewById(R.id.tv_name);
+            this.itemImage = findViewById(R.id.image);
         }
 
         public ImageView getIvArrow() {
             return ivArrow;
+        }
+
+        public ImageView getItemImage() {
+            return itemImage;
         }
 
         public TextView getTvName() {
